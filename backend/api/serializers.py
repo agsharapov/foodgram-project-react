@@ -59,16 +59,16 @@ class RecipeListSerializer(serializers.ModelSerializer):
     def get_is_favorited(self, obj):
         user = self.get_user()
         return (
-            user.is_authenticated and
-            user.favorites.filter(recipe=obj).exists()
+            user.is_authenticated
+            and user.favorites.filter(recipe=obj).exists()
         )
 
     def get_is_in_cart(self, obj):
         user = self.get_user()
         try:
             return (
-                user.is_authenticated and
-                user.cart.recipes.filter(pk__in=(obj.pk,)).exists()
+                user.is_authenticated
+                and user.cart.recipes.filter(pk__in=(obj.pk,)).exists()
             )
         except Cart.DoesNotExist:
             return False
@@ -76,7 +76,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'id', 'author', 'name', 'image',  'text',
+            'id', 'author', 'name', 'image', 'text',
             'ingredients', 'tags', 'time', 'pub_date',
             'is_favorited', 'is_in_cart',
         )
@@ -193,7 +193,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'id', 'author', 'name', 'image',  'text',
+            'id', 'author', 'name', 'image', 'text',
             'ingredients', 'tags', 'time', 'pub_date',
         )
 
