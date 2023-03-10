@@ -51,10 +51,6 @@ docker-compose up -d --build
 ## 5) Выполнить миграции, создать суперюзера, собрать статику:
  
 docker-compose exec web python manage.py migrate
-
-docker-compose exec backend python manage.py load_ingrs
-
-docker-compose exec backend python manage.py load_tags
  
 docker-compose exec web python manage.py createsuperuser
  
@@ -85,6 +81,7 @@ DB_PORT=5432
 # Данные суперпользователя:
 
 Почта: sashasharapov1999@yandex.ru
+
 Пароль: admin
 
 # Об авторах:

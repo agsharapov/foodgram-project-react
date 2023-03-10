@@ -1,25 +1,45 @@
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
-from rest_framework.status import HTTP_400_BAD_REQUEST
 
 from recipes.models import Recipe
-
 from .models import Follow, User
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
+    """
+    Сериализатор для регистрации пользователя.
+    """
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'password'
+        )
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = User.objects.create(
             email=validated_data['email'],
             username=validated_data['username'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
+            last_name=validated_data['last_name']
         )
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class CustomUserSerializer(UserSerializer):
+    """
+    Сериализатор для пользователя.
+    get_is_subscribed показывает,
+    подписан ли текущий пользователь на просматриваемого.
+    """
+    is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -29,13 +49,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
             'username',
             'first_name',
             'last_name',
-            'password',
-        )
-        extra_kwargs = {'password': {'write_only': True}}
-
-
-class CustomUserSerializer(UserSerializer):
-    is_subscribed = serializers.SerializerMethodField(read_only=True)
+            'is_subscribed')
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
@@ -43,47 +57,31 @@ class CustomUserSerializer(UserSerializer):
             return False
         return Follow.objects.filter(user=user, author=obj.id).exists()
 
-    class Meta:
-        model = User
-        fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed',
-        )
-
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
-
+    """
+    Сериализатор для краткого отображения сведений о рецепте
+    """
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class FollowSerializer(CustomUserSerializer):
+    """
+    Сериализатор для вывода подписок пользователя
+    """
     recipes = serializers.SerializerMethodField(read_only=True)
     recipes_count = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('email', 'id', 'username', 'first_name', 'last_name',
+                  'is_subscribed', 'recipes', 'recipes_count')
 
     @staticmethod
     def get_recipes_count(obj):
         return obj.recipes.count()
-
-    def validate(self, data):
-        author = self.instance
-        user = self.context.get('request').user
-        if Follow.objects.filter(author=author, user=user).exists():
-            raise ValidationError(
-                detail='Вы уже подписаны на пользователя.',
-                code=HTTP_400_BAD_REQUEST
-            )
-        if user == author:
-            raise ValidationError(
-                detail='Подписаться на себя нельзя.',
-                code=HTTP_400_BAD_REQUEST
-            )
-        return data
 
     def get_recipes(self, obj):
         request = self.context.get('request')
@@ -92,8 +90,3 @@ class FollowSerializer(CustomUserSerializer):
         if recipes_limit:
             recipes = recipes[:int(recipes_limit)]
         return ShortRecipeSerializer(recipes, many=True).data
-
-    class Meta:
-        model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name',
-                  'is_subscribed', 'recipes', 'recipes_count',)

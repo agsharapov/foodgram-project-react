@@ -1,7 +1,7 @@
-FROM node:13.12.0-alpine as build
+FROM node:13.14.0-alpine as build
 WORKDIR /app
-COPY frontend/package*.json ./
-RUN npm install
-COPY frontend/ ./
+COPY package*.json ./
+RUN npm install --no-package-lock
+COPY . ./
 RUN npm run build
 CMD cp -r build result_build
