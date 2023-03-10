@@ -1,7 +1,7 @@
 class Api {
   constructor (url, headers) {
-    this._url = url
-    this._headers = headers
+    url = url
+    headers = headers
   }
 
   checkResponse (res) {
@@ -36,7 +36,7 @@ class Api {
       '/api/auth/token/login/',
       {
         method: 'POST',
-        headers: this._headers,
+        headers: headers,
         body: JSON.stringify({
           email, password
         })
@@ -51,7 +51,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -63,7 +63,7 @@ class Api {
       `/api/users/`,
       {
         method: 'POST',
-        headers: this._headers,
+        headers: headers,
         body: JSON.stringify({
           email, password, username, first_name, last_name
         })
@@ -78,7 +78,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -92,7 +92,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         },
         body: JSON.stringify({ current_password, new_password })
@@ -119,7 +119,7 @@ class Api {
         {
           method: 'GET',
           headers: {
-            ...this._headers,
+            ...headers,
             ...authorization
           }
         }
@@ -136,7 +136,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...this._headers,
+          ...headers,
           ...authorization
         }
       }
@@ -157,7 +157,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         },
         body: JSON.stringify({
@@ -187,7 +187,7 @@ class Api {
       {
         method: 'PATCH',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         },
         body: JSON.stringify({
@@ -210,7 +210,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -224,7 +224,7 @@ class Api {
       {
         method: 'DELETE',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -238,7 +238,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -255,7 +255,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -275,7 +275,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -291,7 +291,7 @@ class Api {
       {
         method: 'DELETE',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -307,7 +307,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -322,7 +322,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...this._headers
+          ...headers
         }
       }
     ).then(this.checkResponse)
@@ -336,7 +336,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...this._headers
+          ...headers
         }
       }
     ).then(this.checkResponse)
@@ -350,7 +350,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -364,7 +364,7 @@ class Api {
       {
         method: 'DELETE',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -378,7 +378,7 @@ class Api {
       {
         method: 'DELETE',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
@@ -392,7 +392,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...this._headers,
+          ...headers,
           'authorization': `Token ${token}`
         }
       }
