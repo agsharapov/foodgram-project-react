@@ -21,20 +21,14 @@ from .serializers import (FavoriteSerializer, IngredientSerializer,
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
-    """
-    ViewSet для работы с тегами.
-    Добавить тег может администратор.
-    """
+    pagination_class = None
     queryset = Tag.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = TagSerializer
 
 
 class IngredientsViewSet(ReadOnlyModelViewSet):
-    """
-    ViewSet для работы с ингредиентами.
-    Добавить ингредиент может администратор.
-    """
+    pagination_class = None
     queryset = Ingredient.objects.all()
     permission_classes = (AllowAny, )
     serializer_class = IngredientSerializer
