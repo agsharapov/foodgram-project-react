@@ -37,10 +37,6 @@ class IngredientsViewSet(ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet):
-    """
-    ViewSet для работы с рецептами.
-    Для анонимов разрешен только просмотр рецептов.
-    """
     queryset = Recipe.objects.all()
     permission_classes = [IsAuthorOrReadOnly]
     filter_backends = [DjangoFilterBackend]

@@ -12,18 +12,12 @@ from .serializers import CustomUserSerializer, FollowSerializer
 
 
 class CustomUserViewSet(UserViewSet):
-    """
-    ViewSet для работы с пользователями.
-    """
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class FollowViewSet(APIView):
-    """
-    APIView для добавления и удаления подписки на автора
-    """
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPageNumberPagination
@@ -32,7 +26,7 @@ class FollowViewSet(APIView):
         user_id = self.kwargs.get('user_id')
         if user_id == request.user.id:
             return Response(
-                {'error': 'Нельзя подписаться на себя'},
+                {'error': 'Подписаться на себя нельзя.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         if Follow.objects.filter(
@@ -40,7 +34,7 @@ class FollowViewSet(APIView):
                 author_id=user_id
         ).exists():
             return Response(
-                {'error': 'Вы уже подписаны на пользователя'},
+                {'error': 'Вы уже подписаны на пользователя.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         author = get_object_or_404(User, id=user_id)
@@ -64,15 +58,12 @@ class FollowViewSet(APIView):
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
-            {'error': 'Вы не подписаны на пользователя'},
+            {'error': 'Вы не подписаны на пользователя.'},
             status=status.HTTP_400_BAD_REQUEST
         )
 
 
 class FollowListView(ListAPIView):
-    """
-    APIView для просмотра подписок.
-    """
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPageNumberPagination
