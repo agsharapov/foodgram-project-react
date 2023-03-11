@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
 from users.models import User
@@ -7,11 +7,11 @@ from users.models import User
 class Ingredient(models.Model):
     name = models.CharField(
         'Название ингредиента',
-        max_length=200,
+        max_length=100,
     )
     measurement_unit = models.CharField(
         'Единицы измерения',
-        max_length=200,
+        max_length=20,
     )
 
     class Meta:
@@ -29,20 +29,29 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(
-        'Название тега',
-        max_length=200,
+        'Название',
+        max_length=50,
+        unique=True,
+        validators=[
+            RegexValidator(regex=r'^[a-zA-Zа-яА-Я0-9]*$',)
+        ]
     )
     color = models.CharField(
         'Цвет',
-        max_length=7
+        max_length=7,
+        unique=True,
+        validators=[
+            RegexValidator(regex='^#([A-Fa-f0-9]{3}){1,2}$',)
+        ]
     )
     slug = models.SlugField(
         'Адрес',
         unique=True,
-        max_length=200,
+        max_length=50,
     )
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -62,7 +71,7 @@ class Recipe(models.Model):
         max_length=200
     )
     image = models.ImageField(
-        'Изображение',
+        'Картинка',
         upload_to='recipes/',
     )
     text = models.TextField(
@@ -112,11 +121,10 @@ class IngredientAmount(models.Model):
         related_name='amounts',
         verbose_name='Ингредиент'
     )
-    amount = models.PositiveSmallIntegerField(
+    amount = models.DecimalField(
         'Количество ингредиента',
-        validators=(
-            MinValueValidator(
-                1, message='Количество не может быть меньше 1'),),
+        max_digits=6,
+        decimal_places=2,
     )
 
     class Meta:
