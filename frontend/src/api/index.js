@@ -1,7 +1,7 @@
 class Api {
   constructor (url, headers) {
-    url = url
-    headers = headers
+    this._url = url
+    this._headers = headers
   }
 
   checkResponse (res) {
@@ -36,7 +36,7 @@ class Api {
       '/api/auth/token/login/',
       {
         method: 'POST',
-        headers: headers,
+        headers: this._headers,
         body: JSON.stringify({
           email, password
         })
@@ -51,7 +51,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -63,7 +63,7 @@ class Api {
       `/api/users/`,
       {
         method: 'POST',
-        headers: headers,
+        headers: this._headers,
         body: JSON.stringify({
           email, password, username, first_name, last_name
         })
@@ -78,7 +78,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -92,7 +92,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         },
         body: JSON.stringify({ current_password, new_password })
@@ -107,7 +107,7 @@ class Api {
     page = 1,
     limit = 6,
     is_favorited = 0,
-    is_in_cart = 0,
+    is_in_shopping_cart = 0,
     author,
     tags
   } = {}) {
@@ -115,11 +115,11 @@ class Api {
       const authorization = token ? { 'authorization': `Token ${token}` } : {}
       const tagsString = tags ? tags.filter(tag => tag.value).map(tag => `&tags=${tag.slug}`).join('') : ''
       return fetch(
-        `/api/recipes/?page=${page}&limit=${limit}${author ? `&author=${author}` : ''}${is_favorited ? `&is_favorited=${is_favorited}` : ''}${is_in_cart ? `&is_in_cart=${is_in_cart}` : ''}${tagsString}`,
+        `/api/recipes/?page=${page}&limit=${limit}${author ? `&author=${author}` : ''}${is_favorited ? `&is_favorited=${is_favorited}` : ''}${is_in_shopping_cart ? `&is_in_shopping_cart=${is_in_shopping_cart}` : ''}${tagsString}`,
         {
           method: 'GET',
           headers: {
-            ...headers,
+            ...this._headers,
             ...authorization
           }
         }
@@ -136,7 +136,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...headers,
+          ...this._headers,
           ...authorization
         }
       }
@@ -157,7 +157,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         },
         body: JSON.stringify({
@@ -187,7 +187,7 @@ class Api {
       {
         method: 'PATCH',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         },
         body: JSON.stringify({
@@ -210,7 +210,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -224,7 +224,7 @@ class Api {
       {
         method: 'DELETE',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -238,7 +238,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -255,7 +255,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -275,7 +275,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -291,7 +291,7 @@ class Api {
       {
         method: 'DELETE',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -307,7 +307,7 @@ class Api {
       {
         method: 'POST',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -322,7 +322,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...headers
+          ...this._headers
         }
       }
     ).then(this.checkResponse)
@@ -336,7 +336,7 @@ class Api {
       {
         method: 'GET',
         headers: {
-          ...headers
+          ...this._headers
         }
       }
     ).then(this.checkResponse)
@@ -346,11 +346,11 @@ class Api {
   addToOrders ({ id }) {
     const token = localStorage.getItem('token')
     return fetch(
-      `/api/recipes/${id}/cart/`,
+      `/api/recipes/${id}/shopping_cart/`,
       {
         method: 'POST',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -360,11 +360,11 @@ class Api {
   removeFromOrders ({ id }) {
     const token = localStorage.getItem('token')
     return fetch(
-      `/api/recipes/${id}/cart/`,
+      `/api/recipes/${id}/shopping_cart/`,
       {
         method: 'DELETE',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -378,7 +378,7 @@ class Api {
       {
         method: 'DELETE',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
@@ -388,11 +388,11 @@ class Api {
   downloadFile () {
     const token = localStorage.getItem('token')
     return fetch(
-      `/api/recipes/download_cart/`,
+      `/api/recipes/download_shopping_cart/`,
       {
         method: 'GET',
         headers: {
-          ...headers,
+          ...this._headers,
           'authorization': `Token ${token}`
         }
       }
